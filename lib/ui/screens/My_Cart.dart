@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:payment_app/ui/core/utils/styles.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:payment_app/core/utils/styles.dart';
+import 'package:payment_app/data/models/cubits/payment_cubit.dart';
+import 'package:payment_app/data/repos/checkout_repo_impl.dart';
 import 'package:payment_app/ui/screens/Payment_Details.dart';
 import 'package:payment_app/ui/widgets/Button_widget.dart';
 import 'package:payment_app/ui/widgets/Order_Info_Item.dart';
 import 'package:payment_app/ui/widgets/PaymentMethodsListView.dart';
 import 'package:payment_app/ui/widgets/Total_Price.dart';
 import 'package:payment_app/ui/widgets/appBar_Widget.dart';
+import 'package:payment_app/ui/widgets/payment_method_bottom_sheet.dart';
 
 class MyCart extends StatelessWidget {
   const MyCart({super.key});
@@ -54,7 +59,10 @@ class MyCart extends StatelessWidget {
                     borderRadius: BorderRadiusGeometry.circular(20),
                   ),
                   builder: (context) {
-                    return PaymentMethodBottomSheet();
+                    return BlocProvider(
+                      create: (context) => PaymentCubit(CheckoutRepoImpl()),
+                      child: PaymentMethodBottomSheet(),
+                    );
                   },
                 );
               },
@@ -67,23 +75,48 @@ class MyCart extends StatelessWidget {
     );
   }
 }
+//Steps:
+ // 1. create payment intent on the server
+/// PaymentIntentObject create payment intent (amount,currency)
+/// -----------------------------------------------------------
+// 2. initialize the payment sheet
+///  ( paymentIntentClientSecret)
+// 3. presentPaymentSheet
 
-class PaymentMethodBottomSheet extends StatelessWidget {
-  const PaymentMethodBottomSheet({super.key});
+// // Future<void> initPaymentSheet() async {
+//     try {
+//       // 1. create payment intent on the server
+      
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(height: 16),
-          PaymentMethodsListView(),
-          SizedBox(height: 30),
-          ButtonWidget(title: "Continue"),
-        ],
-      ),
-    );
-  }
-}
+//       // 2. initialize the payment sheet
+//      await Stripe.instance.initPaymentSheet(
+//         paymentSheetParameters: SetupPaymentSheetParameters(
+          
+//           // Main params
+//           merchantDisplayName: 'Flutter Stripe Store Demo',
+//           paymentIntentClientSecret: data['paymentIntent'],
+//           // Customer keys
+//           // customerEphemeralKeySecret: data['ephemeralKey'],
+//           // customerId: data['customer'],
+//           // // Extra options
+//           // applePay: const PaymentSheetApplePay(
+//           //   merchantCountryCode: 'US',
+//           // ),
+//           // googlePay: const PaymentSheetGooglePay(
+//           //   merchantCountryCode: 'US',
+//           //   testEnv: true,
+//           // ),
+//           style: ThemeMode.dark,
+//         ),
+//       );
+//       setState(() {
+//         _ready = true;
+//       });
+//     } catch (e) {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(content: Text('Error: $e')),
+//       );
+//       rethrow;
+//     }
+// }
+

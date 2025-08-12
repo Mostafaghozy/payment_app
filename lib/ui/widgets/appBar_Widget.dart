@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:payment_app/ui/core/utils/styles.dart';
+import 'package:payment_app/core/utils/styles.dart';
 
 AppBar appBar({final String? title}) {
   return AppBar(

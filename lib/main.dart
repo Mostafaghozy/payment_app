@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:payment_app/core/utils/api_keys.dart';
 import 'package:payment_app/ui/screens/My_Cart.dart';
 
 void main() {
+  Stripe.publishableKey = ApiKeys.publishableKey;
   runApp(const CheckoutApp());
 }
 
@@ -13,3 +16,4 @@ class CheckoutApp extends StatelessWidget {
     return MaterialApp(debugShowCheckedModeBanner: false, home: const MyCart());
   }
 }
+// create payment intent(amount , currency , customerId)

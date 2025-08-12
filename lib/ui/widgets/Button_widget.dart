@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:payment_app/ui/core/utils/styles.dart';
+import 'package:payment_app/core/utils/styles.dart';
 
 class ButtonWidget extends StatelessWidget {
-  const ButtonWidget({super.key, required this.title, this.onTap});
+  const ButtonWidget({
+    super.key,
+    required this.title,
+    this.onTap,
+    this.isLoading = false,
+  });
   final String title;
   final void Function()? onTap;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +25,9 @@ class ButtonWidget extends StatelessWidget {
         ),
         alignment: Alignment.center,
 
-        child: Text(title, style: Styles.style22, textAlign: TextAlign.center),
+        child: isLoading
+            ? CircularProgressIndicator()
+            : Text(title, style: Styles.style22, textAlign: TextAlign.center),
       ),
     );
   }
