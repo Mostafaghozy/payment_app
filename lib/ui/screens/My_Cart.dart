@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:payment_app/core/utils/styles.dart';
-import 'package:payment_app/data/models/cubits/payment_cubit.dart';
+import 'package:payment_app/data/models/cubits_stripe/payment_cubit.dart';
 import 'package:payment_app/data/repos/checkout_repo_impl.dart';
 import 'package:payment_app/ui/screens/Payment_Details.dart';
 import 'package:payment_app/ui/widgets/Button_widget.dart';

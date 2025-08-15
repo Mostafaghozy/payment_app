@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:payment_app/data/models/cubits/payment_state.dart';
+import 'package:payment_app/data/models/cubits_stripe/payment_state.dart';
 import 'package:payment_app/data/models/payment_intent_model/payment_intent_input_model.dart';
 import 'package:payment_app/data/repos/checkout_repo.dart';
 
