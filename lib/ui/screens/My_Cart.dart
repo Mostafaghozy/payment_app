@@ -76,7 +76,7 @@ class MyCart extends StatelessWidget {
   }
 }
 //Steps:
- // 1. create payment intent on the server
+// 1. create payment intent on the server
 /// PaymentIntentObject create payment intent (amount,currency)
 /// -----------------------------------------------------------
 // 2. initialize the payment sheet
@@ -86,12 +86,11 @@ class MyCart extends StatelessWidget {
 // // Future<void> initPaymentSheet() async {
 //     try {
 //       // 1. create payment intent on the server
-      
 
 //       // 2. initialize the payment sheet
 //      await Stripe.instance.initPaymentSheet(
 //         paymentSheetParameters: SetupPaymentSheetParameters(
-          
+
 //           // Main params
 //           merchantDisplayName: 'Flutter Stripe Store Demo',
 //           paymentIntentClientSecret: data['paymentIntent'],
@@ -119,4 +118,3 @@ class MyCart extends StatelessWidget {
 //       rethrow;
 //     }
 // }
-

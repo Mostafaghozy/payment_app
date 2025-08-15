@@ -16,4 +16,8 @@ class CheckoutApp extends StatelessWidget {
     return MaterialApp(debugShowCheckedModeBanner: false, home: const MyCart());
   }
 }
+
 // create payment intent(amount , currency , customerId)
+//KeySecret create EphemeralKey (stripeVersion , customerId)
+// initPaymentSheet (merchantDisplayName , IntentClientSecret , EphemeralKeySecret)
+// presentPaymentSheet

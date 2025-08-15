@@ -12,7 +12,6 @@ class _PaymentMethodsListViewState extends State<PaymentMethodsListView> {
   final List<String> PaymentMethodsItems = const [
     'assets/images/card.png',
     'assets/images/PayPal.png',
-    'assets/images/pay.png',
   ];
   int activeIndex = 0;
   @override
