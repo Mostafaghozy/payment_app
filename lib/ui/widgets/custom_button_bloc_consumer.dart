@@ -1,14 +1,24 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_paypal_payment/flutter_paypal_payment.dart';
+import 'package:payment_app/core/functions/get_transactions.dart';
+import 'package:payment_app/core/utils/api_keys.dart';
+import 'package:payment_app/data/models/amount_model/amount_model.dart';
+import 'package:payment_app/data/models/amount_model/details.dart';
 import 'package:payment_app/data/models/cubits_stripe/payment_cubit.dart';
 import 'package:payment_app/data/models/cubits_stripe/payment_state.dart';
+import 'package:payment_app/data/models/item_list_model/item.dart';
+import 'package:payment_app/data/models/item_list_model/item_list_model.dart';
 import 'package:payment_app/data/models/payment_intent_model/payment_intent_input_model.dart';
+import 'package:payment_app/ui/screens/My_Cart.dart';
 import 'package:payment_app/ui/screens/Thank_you.dart';
 import 'package:payment_app/ui/widgets/Button_widget.dart';
 
 class CustomButtonBlocConsumer extends StatelessWidget {
-  const CustomButtonBlocConsumer({super.key});
+  const CustomButtonBlocConsumer({super.key, required this.isPaypal});
+  final bool isPaypal;
 
   @override
   Widget build(BuildContext context) {
@@ -32,71 +42,94 @@ class CustomButtonBlocConsumer extends StatelessWidget {
       builder: (context, state) {
         return ButtonWidget(
           onTap: () {
-            // PaymentIntentInputModel paymentIntentInputModel =
-            //     PaymentIntentInputModel(
-            //       amount: "100",
-            //       currency: "USD",
-            //       customerId: 'cus_SrNbuc9QbdLH7O',
-            //     );
-            // BlocProvider.of<PaymentCubit>(
-            //   context,
-            // ).makePayment(paymentIntentInputModel: paymentIntentInputModel);
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (BuildContext context) => PaypalCheckoutView(
-                  sandboxMode: true, //when live mode translate to false
-                  clientId: "",
-                  secretKey: "",
-                  transactions: const [
-                    {
-                      "amount": {
-                        "total": "70",
-                        "currency": "USD",
-                        "details": {
-                          "subtotal": "70",
-                          "shipping": "0",
-                          "shipping_discount": 0,
-                        },
-                      },
-                      "description": "The payment transaction description.",
-
-                      "item_list": {
-                        "items": [
-                          {
-                            "name": "Apple",
-                            "quantity": 4,
-                            "price": '5',
-                            "currency": "USD",
-                          },
-                          {
-                            "name": "Pineapple",
-                            "quantity": 5,
-                            "price": '10',
-                            "currency": "USD",
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                  note: "Contact us for any questions on your order.",
-                  onSuccess: (Map params) async {
-                    print("onSuccess: $params");
-                  },
-                  onError: (error) {
-                    print("onError: $error");
-                    Navigator.pop(context);
-                  },
-                  onCancel: () {
-                    print('cancelled:');
-                  },
-                ),
-              ),
-            );
+            if (isPaypal) {
+              var transactionsData = getTransactionData();
+              executePaypalPayment(context, transactionsData);
+            } else {
+              executeStripePayment(context);
+            }
           },
           isLoading: state is PaymentLoading ? true : false,
           title: "Continue",
         );
       },
+    );
+  }
+
+  void executeStripePayment(BuildContext context) {
+    PaymentIntentInputModel paymentIntentInputModel = PaymentIntentInputModel(
+      amount: "100",
+      currency: "USD",
+      customerId: 'cus_SrNbuc9QbdLH7O',
+    );
+    BlocProvider.of<PaymentCubit>(
+      context,
+    ).makePayment(paymentIntentInputModel: paymentIntentInputModel);
+  }
+
+  void executePaypalPayment(
+    BuildContext context,
+    ({AmountModel amount, ItemListModel itemList}) transactionsData,
+  ) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) => PaypalCheckoutView(
+          sandboxMode: true, //when live mode translate to false
+          clientId: ApiKeys.clientId,
+          secretKey: ApiKeys.paypalSecretKey,
+          transactions: [
+            {
+              "amount": transactionsData.amount.toJson(),
+              "description": "The payment transaction description.",
+
+              "item_list": transactionsData.itemList.toJson(),
+            },
+          ],
+          note: "Contact us for any questions on your order.",
+          onSuccess: (Map params) async {
+            log("onSuccess: $params");
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return ThankYou();
+                },
+              ),
+              (route) {
+                //if return into screen
+                if (route.settings.name == "/") {
+                  return true;
+                } else {
+                  return false;
+                }
+              },
+            );
+          },
+          onError: (error) {
+            SnackBar snackBar = SnackBar(content: Text(error.toString()));
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return MyCart();
+                },
+              ),
+              (route) {
+                //if return into screen
+                if (route.settings.name == "/") {
+                  return true;
+                } else {
+                  return false;
+                }
+              },
+            );
+          },
+          onCancel: () {
+            log('cancelled:');
+          },
+        ),
+      ),
     );
   }
 }

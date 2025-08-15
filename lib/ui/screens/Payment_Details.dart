@@ -23,7 +23,7 @@ class _PaymentDetailsState extends State<PaymentDetails> {
       appBar: appBar(title: "Payment Details"),
       body: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(child: PaymentMethodsListView()),
+          // SliverToBoxAdapter(child: PaymentMethodsListView()),
           SliverToBoxAdapter(
             child: CustomCreditCard(
               formKey: formKey,
